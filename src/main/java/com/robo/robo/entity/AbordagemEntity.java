@@ -2,6 +2,7 @@ package com.robo.robo.entity;
 
 import com.robo.robo.enumerator.EtapaAbordagem;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,6 +16,7 @@ import static javax.persistence.GenerationType.IDENTITY;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class AbordagemEntity {
 
     @Id
@@ -26,6 +28,8 @@ public class AbordagemEntity {
     private LocalDateTime ultimaTentativa;
 
     private String telefone;
+
+    private String telefoneNaoFormatado;
 
     @Column(name = "ativo")
     private boolean isAtivo;
