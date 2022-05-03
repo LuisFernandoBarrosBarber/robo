@@ -31,11 +31,13 @@ public class AbordagemEntity {
 
     private String telefoneNaoFormatado;
 
+    private String erro;
+
     @Column(name = "ativo")
     private boolean isAtivo;
 
     @Column(name = "sucesso")
-    private boolean isSuscesso;
+    private boolean isSucesso;
 
     @Column
     @Enumerated(EnumType.STRING)

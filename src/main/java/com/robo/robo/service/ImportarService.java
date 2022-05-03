@@ -12,7 +12,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.robo.robo.enumerator.EtapaAbordagem.NAO_ABORDADO;
+import static com.robo.robo.enumerator.EtapaAbordagem.PRIMEIRA_ETAPA;
 
 @Service
 @RequiredArgsConstructor
@@ -52,7 +52,7 @@ public class ImportarService {
                 .isAtivo(true)
                 .telefoneNaoFormatado(unformattedNumber)
                 .telefone(phoneService.formatNumberToSave(unformattedNumber))
-                .etapaAbordagem(NAO_ABORDADO)
+                .etapaAbordagem(PRIMEIRA_ETAPA)
                 .build();
     }
 }
