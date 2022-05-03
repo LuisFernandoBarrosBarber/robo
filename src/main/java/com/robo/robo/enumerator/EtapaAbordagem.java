@@ -1,6 +1,6 @@
 package com.robo.robo.enumerator;
 
 public enum EtapaAbordagem {
-    NAO_ABORDADO,
-    PRIMEIRA_ETAPA
+    PRIMEIRA_ETAPA,
+    SEGUNDA_ETAPA
 }

@@ -10,7 +10,7 @@ import org.springframework.stereotype.Service;
 @Slf4j
 public class AbordagemHelpService {
 
-    public void tryAbordar(AbordagemEntity a) {
+    public void tryAbordar(AbordagemEntity a, String text) {
         if (a.getId() % 2 == 0) {
             throw new RuntimeException("ERRO AO ABORDAR");
         }
