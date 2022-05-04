@@ -1,22 +1,21 @@
 package com.robo.robo.service;
 
+import com.robo.robo.configuration.MineradosStorageProperties;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.InputStream;
 
 @Service
 @RequiredArgsConstructor
 public class FileService {
 
-    public InputStream getFileAsIOStream(final String fileName) {
-        InputStream ioStream = this.getClass()
-                .getClassLoader()
-                .getResourceAsStream(fileName);
+    private final MineradosStorageProperties storageProperties;
 
-        if (ioStream == null) {
-            throw new IllegalArgumentException(fileName + " is not found");
-        }
-        return ioStream;
+    public InputStream getFileAsIOStream() throws FileNotFoundException {
+
+        return new FileInputStream(storageProperties.getFile());
     }
 }
