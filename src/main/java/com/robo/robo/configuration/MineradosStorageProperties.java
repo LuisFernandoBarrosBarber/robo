@@ -10,7 +10,7 @@ public class MineradosStorageProperties {
     private String file;
 
     public String getFile() {
-        return this.file;
+        return this.file+"/minerados.txt";
     }
 
     public void setFile(String file) {
