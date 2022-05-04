@@ -1,0 +1,1 @@
+ALTER TABLE abordagem ADD COLUMN erro VARCHAR(1000);
