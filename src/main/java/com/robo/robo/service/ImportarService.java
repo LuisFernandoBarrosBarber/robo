@@ -26,7 +26,7 @@ public class ImportarService {
         List<AbordagemEntity> abordagens = new ArrayList<>();
 
         try {
-            InputStream is = fileService.getFileAsIOStream("data/minerado.txt");
+            InputStream is = fileService.getFileAsIOStream();
             InputStreamReader isr = new InputStreamReader(is);
             BufferedReader br = new BufferedReader(isr);
             String line;

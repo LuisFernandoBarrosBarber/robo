@@ -1,6 +1,7 @@
 package com.robo.robo.service.whatsapp;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.robo.robo.configuration.WhatsAppProperties;
 import com.robo.robo.service.whatsapp.response.ResponseBody;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,9 +26,11 @@ import static java.nio.charset.StandardCharsets.UTF_8;
 @Slf4j
 public class WhatsAppService {
 
+    private final WhatsAppProperties whatsAppProperties;
+
     public ResponseBody send(String number, String message) throws IOException {
 
-        URL url = new URL("http://localhost:8000/send-message");
+        URL url = new URL(whatsAppProperties.getHost() + "/send-message");
         HttpURLConnection connection = (HttpURLConnection) url.openConnection();
 
         connection.setRequestMethod("POST");
@@ -71,9 +74,9 @@ public class WhatsAppService {
 
     private static String getWhatsAppNumber(String number) {
         String ddd = number.substring(0, 2);
-        List<String> dddWithNovoDigito = List.of("11","21", "18", "14");
+        List<String> dddWithNovoDigito = List.of("11", "21", "18", "14");
         String numeroFormatado = "";
-        if(dddWithNovoDigito.contains(ddd)){
+        if (dddWithNovoDigito.contains(ddd)) {
             numeroFormatado = number.substring(number.length() - 9);
         } else {
             numeroFormatado = number.substring(number.length() - 8);
