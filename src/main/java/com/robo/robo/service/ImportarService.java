@@ -13,6 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static com.robo.robo.enumerator.EtapaAbordagem.PRIMEIRA_ETAPA;
+import static com.robo.robo.service.PhoneService.getNumber;
 
 @Service
 @RequiredArgsConstructor
@@ -22,7 +23,7 @@ public class ImportarService {
     private final FileService fileService;
     private final PhoneService phoneService;
 
-    public List<AbordagemEntity> getAbordagensFromFile(List<String> alreadyInBase) {
+    public List<AbordagemEntity> getAbordagensFromFile(List<String> alreadyInBase, List<String> ignorarList) {
         List<AbordagemEntity> abordagens = new ArrayList<>();
 
         try {
@@ -32,8 +33,8 @@ public class ImportarService {
             String line;
             while ((line = br.readLine()) != null) {
                 AbordagemEntity entity = toEntity(line);
-                // NAO SALVA SE NUMERO JA EXISTE
-                if (!alreadyInBase.contains(entity.getTelefone())) {
+                // NAO SALVA SE NUMERO JA EXISTE OU SE ESTA NA LISTA DE IGNORADOS
+                if (!alreadyInBase.contains(entity.getTelefone()) && !isIgnorado(entity.getTelefone(), ignorarList)) {
                     abordagens.add(entity);
                 }
             }
@@ -54,5 +55,11 @@ public class ImportarService {
                 .telefone(phoneService.formatNumberToSave(unformattedNumber))
                 .etapaAbordagem(PRIMEIRA_ETAPA)
                 .build();
+    }
+
+    private boolean isIgnorado(String telefone, List<String> ignorados) {
+        return ignorados
+                .stream()
+                .anyMatch(ignorado -> getNumber(telefone).equals(getNumber(ignorado)));
     }
 }

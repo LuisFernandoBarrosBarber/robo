@@ -1,8 +1,10 @@
 package com.robo.robo.service;
 
 import com.robo.robo.entity.AbordagemEntity;
+import com.robo.robo.entity.IgnorarEntity;
 import com.robo.robo.enumerator.EtapaAbordagem;
 import com.robo.robo.repository.AbordagemRepository;
+import com.robo.robo.repository.IgnorarRepository;
 import com.robo.robo.service.etapas.Etapa;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -22,6 +24,7 @@ import static java.time.LocalDateTime.now;
 public class AbordagemService {
 
     private final AbordagemRepository repository;
+    private final IgnorarRepository ignorarRepository;
     private final ImportarService importarService;
     private final AbordagemHelpService helpService;
     private final List<Etapa> etapas;
@@ -37,7 +40,13 @@ public class AbordagemService {
                         .map(AbordagemEntity::getTelefone)
                         .collect(Collectors.toList());
 
-        repository.saveAll(importarService.getAbordagensFromFile(alreadyInBase));
+        List<String> ignorarList =
+                ignorarRepository.findAll()
+                        .stream()
+                        .map(IgnorarEntity::getTelefone)
+                        .collect(Collectors.toList());
+
+        repository.saveAll(importarService.getAbordagensFromFile(alreadyInBase, ignorarList));
         log.info(operacao + " CONCLUÍDA");
         return FINISH + operacao;
     }
