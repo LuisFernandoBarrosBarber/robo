@@ -12,7 +12,7 @@ public class PhoneService {
         return getDDD(cleanNumber) + getNumber(cleanNumber);
     }
 
-    private static String getNumber(String number) {
+    public static String getNumber(String number) {
         return number.substring(number.length() - 8);
     }
 
