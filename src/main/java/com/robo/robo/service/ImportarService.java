@@ -1,16 +1,22 @@
 package com.robo.robo.service;
 
 import com.robo.robo.entity.AbordagemEntity;
+import com.robo.robo.entity.IgnorarEntity;
+import com.robo.robo.repository.AbordagemRepository;
+import com.robo.robo.repository.IgnorarRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+
+import javax.transaction.Transactional;
 
 import static com.robo.robo.enumerator.EtapaAbordagem.PRIMEIRA_ETAPA;
 import static com.robo.robo.service.PhoneService.getNumber;
@@ -22,9 +28,12 @@ public class ImportarService {
 
     private final FileService fileService;
     private final PhoneService phoneService;
+    private final AbordagemRepository repository;
+    private final IgnorarRepository ignorarRepository;
 
-    public List<AbordagemEntity> getAbordagensFromFile(List<String> alreadyInBase, List<String> ignorarList) {
-        List<AbordagemEntity> abordagens = new ArrayList<>();
+    public int getAbordagensFromFile() {
+        int totalInseridos = 0;
+        List<String> ignorarList = getIgnorarList();
 
         try {
             InputStream is = fileService.getFileAsIOStream();
@@ -33,9 +42,8 @@ public class ImportarService {
             String line;
             while ((line = br.readLine()) != null) {
                 AbordagemEntity entity = toEntity(line);
-                // NAO SALVA SE NUMERO JA EXISTE OU SE ESTA NA LISTA DE IGNORADOS
-                if (!alreadyInBase.contains(entity.getTelefone()) && !isIgnorado(entity.getTelefone(), ignorarList)) {
-                    abordagens.add(entity);
+                if (testAndSave(ignorarList, entity)) {
+                    totalInseridos++;
                 }
             }
             is.close();
@@ -43,8 +51,20 @@ public class ImportarService {
             log.error("Erro ao importar telefones");
             e.printStackTrace();
         }
-        log.info("ENCONTRADOS " + abordagens.size() + " NOVOS TELEFONES");
-        return abordagens;
+        return totalInseridos;
+    }
+
+    @Transactional
+    public boolean testAndSave(List<String> ignorarList, AbordagemEntity entity) {
+        if (!isIgnorado(entity.getTelefone(), ignorarList)) {
+            try {
+                repository.saveAndFlush(entity);
+            } catch (DataIntegrityViolationException e) {
+                log.info(entity.getTelefone() + " JÁ CADASTRADO!");
+                return false;
+            }
+        }
+        return true;
     }
 
     private AbordagemEntity toEntity(String unformattedNumber) {
@@ -62,4 +82,12 @@ public class ImportarService {
                 .stream()
                 .anyMatch(ignorado -> getNumber(telefone).equals(getNumber(ignorado)));
     }
+
+    private List<String> getIgnorarList() {
+        return ignorarRepository.findAll()
+                .stream()
+                .map(IgnorarEntity::getTelefone)
+                .collect(Collectors.toList());
+    }
+
 }

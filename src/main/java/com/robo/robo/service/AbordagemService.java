@@ -1,7 +1,6 @@
 package com.robo.robo.service;
 
 import com.robo.robo.entity.AbordagemEntity;
-import com.robo.robo.entity.IgnorarEntity;
 import com.robo.robo.enumerator.EtapaAbordagem;
 import com.robo.robo.repository.AbordagemRepository;
 import com.robo.robo.repository.IgnorarRepository;
@@ -30,25 +29,12 @@ public class AbordagemService {
     private final List<Etapa> etapas;
     private static final String FINISH = "OPERAÇÃO CONCLUÍDA: ";
 
-    @Transactional
     public String importar() {
         String operacao = "IMPORTAÇÃO";
         log.info(operacao + " INICIADA");
-        List<String> alreadyInBase =
-                repository.findAll()
-                        .stream()
-                        .map(AbordagemEntity::getTelefone)
-                        .collect(Collectors.toList());
-
-        List<String> ignorarList =
-                ignorarRepository.findAll()
-                        .stream()
-                        .map(IgnorarEntity::getTelefone)
-                        .collect(Collectors.toList());
-
-        repository.saveAll(importarService.getAbordagensFromFile(alreadyInBase, ignorarList));
+        int totalInseridos = importarService.getAbordagensFromFile();
         log.info(operacao + " CONCLUÍDA");
-        return FINISH + operacao;
+        return FINISH + operacao + ". TOTAL IMPORTADO: " + totalInseridos;
     }
 
     @Transactional
