@@ -54,6 +54,7 @@ public class AbordagemService {
         abordagens.forEach(it -> {
             it.setUltimaTentativa(now());
             try {
+                Thread.sleep(5000L);
                 helpService.tryAbordar(it, etapa.getTextToAbordar());
                 it.setSucesso(true);
                 it.setEtapaAbordagem(etapa.nextEtapa());
