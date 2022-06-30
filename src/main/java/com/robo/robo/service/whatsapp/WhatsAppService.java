@@ -7,7 +7,6 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.IOException;
@@ -16,7 +15,6 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import static java.nio.charset.StandardCharsets.UTF_8;
@@ -35,7 +33,7 @@ public class WhatsAppService {
 
         connection.setRequestMethod("POST");
         Map<String, String> params = new HashMap<>();
-        params.put("number", getWhatsAppNumber(number));
+        params.put("number", number);
         params.put("message", message);
         params.put("token", "TOKEN_HARD_BARBER_2021");
 
@@ -70,17 +68,5 @@ public class WhatsAppService {
         } finally {
             connection.disconnect();
         }
-    }
-
-    private static String getWhatsAppNumber(String number) {
-        String ddd = number.substring(0, 2);
-        List<String> dddWithNovoDigito = List.of("11", "21", "18", "14");
-        String numeroFormatado = "";
-        if (dddWithNovoDigito.contains(ddd)) {
-            numeroFormatado = number.substring(number.length() - 9);
-        } else {
-            numeroFormatado = number.substring(number.length() - 8);
-        }
-        return "55" + ddd + numeroFormatado;
     }
 }

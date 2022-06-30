@@ -21,12 +21,12 @@ public class PrimeiraEtapa implements Etapa {
     @Override
     public String getTextToAbordar() {
         return """
-                Bom dia, tudo bem?
+                Olá, tudo bem?
                                 
                 Somos a *Barbeiro Agenda*, sistema para automatizar seu atendimento de clientes na barbearia!
                 Temos como objetivo *economizar seu tempo*, através de um sistema interativo onde o cliente pode fazer o agendamento, além de entrar em contato direto com você, verificar outras informações da barbearia, como localização, rede socias e demais informações.
                                 
-                Gostariamos de te passar mais detalhes. Pode ser?
+                Gostariamos de te passar mais detalhes. Pode ser? :)
                 """;
     }
 }

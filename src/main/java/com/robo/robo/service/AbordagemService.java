@@ -3,7 +3,6 @@ package com.robo.robo.service;
 import com.robo.robo.entity.AbordagemEntity;
 import com.robo.robo.enumerator.EtapaAbordagem;
 import com.robo.robo.repository.AbordagemRepository;
-import com.robo.robo.repository.IgnorarRepository;
 import com.robo.robo.service.etapas.Etapa;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -23,7 +22,6 @@ import static java.time.LocalDateTime.now;
 public class AbordagemService {
 
     private final AbordagemRepository repository;
-    private final IgnorarRepository ignorarRepository;
     private final ImportarService importarService;
     private final AbordagemHelpService helpService;
     private final List<Etapa> etapas;
@@ -54,13 +52,11 @@ public class AbordagemService {
         abordagens.forEach(it -> {
             it.setUltimaTentativa(now());
             try {
-                Thread.sleep(5000L);
                 helpService.tryAbordar(it, etapa.getTextToAbordar());
                 it.setSucesso(true);
                 it.setEtapaAbordagem(etapa.nextEtapa());
                 it.setErro(null);
             } catch (Exception ex) {
-                log.info("ERRO AO ABORDAR NÚMERO " + it.getTelefone());
                 it.setErro(ex.getMessage());
                 it.setAtivo(false);
                 it.setSucesso(false);
